@@ -3,4 +3,7 @@
     <string name="textview">TextView</string>
     <string name="error">错误</string>
     <string name="solution">解决方案</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 </resources>

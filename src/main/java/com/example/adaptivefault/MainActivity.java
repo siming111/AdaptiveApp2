@@ -40,7 +40,7 @@ import org.json.JSONTokener;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends Activity{
 
     private ImageView icon;
     private Button go;

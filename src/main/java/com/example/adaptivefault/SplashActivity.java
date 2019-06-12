@@ -12,7 +12,7 @@ import android.widget.Button;
 
 import static android.view.Window.FEATURE_NO_TITLE;
 
-public class SplashActivity extends Activity {
+public class SplashActivity extends Activity{
     private Button mBtnSkip;
     private Handler mHandler = new Handler();
 
