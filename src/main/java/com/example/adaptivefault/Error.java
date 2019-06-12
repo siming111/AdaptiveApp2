@@ -35,25 +35,26 @@ public class Error implements Serializable {
         return this.error;
     }
 
-    public static Error[] getFromLocal(Context context){
+    public static List<Error> getFromLocal(Context context){
         FileInputStream fis = null;
         ObjectInputStream ois = null;
-        Error error = null;
         List<Error> errorList = new ArrayList<>();
         File file = context.getFilesDir();
         //Log.d("file",file.getAbsolutePath());
         for(File file1:file.listFiles()){
-            System.out.println(file1.toString());
+            Log.d("file",file1.toString());
             try {
                 fis = new FileInputStream(file1);
                 ois = new ObjectInputStream(fis);
-                error = (Error) ois.readObject();
+                Error error = (Error) ois.readObject();
+                if(error!=null) {
+                    errorList.add(error);
+                }
             }catch(Exception e){
                 e.printStackTrace();
             }
-            errorList.add(error);
         }
-        return (Error[])errorList.toArray(new Error[0]);
+        return errorList;
     }
 
     public void saveInLocal(Context context){

@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
         this.setFloatingActionButton();
         this.setGoButton();
         this.setErrorTextView();
-        this.updateListView();
+        //this.updateListView();
         this.setListView();
     }
 
@@ -270,7 +270,7 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
     }
 
     private void updateListView(){
-        errors = Error.getFromLocal(this);
+        //errors = Error.getFromLocal(this);
         for(Error error:errors){
             if(error != null)
             errorMap.put(error.getError(),error);
@@ -282,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
 
     @Override
     public void onRestart(){
-        this.updateListView();
+        //this.updateListView();
         super.onRestart();
     }
 

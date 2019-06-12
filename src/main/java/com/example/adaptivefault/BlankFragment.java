@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -83,9 +84,9 @@ public class BlankFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         Log.d("recyclerView", recyclerView.toString());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        List<String> errors = new ArrayList<>();
-        errors.add("123");
-        errors.add("456");
+        List<Error> errors = Error.getFromLocal(getContext());
+        errors.add(new Error("123","456"));
+        Log.d("number", "" + errors.size());
         RecyclerListAdapter recyclerListAdapter = new RecyclerListAdapter(errors);
         RecyclerListAdapter.MyItemTouchCallback myItemTouchCallback = recyclerListAdapter.new MyItemTouchCallback(recyclerListAdapter);
         recyclerView.setAdapter(recyclerListAdapter);
@@ -178,18 +179,16 @@ public class BlankFragment extends Fragment {
 
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder{
+        class ViewHolder extends RecyclerView.ViewHolder {
             private TextView error;
 
-            public ViewHolder(View view) {
+            ViewHolder(View view) {
                 super(view);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //Toast.makeText(getContext(),"error",Toast.LENGTH_SHORT).show();
-                        //Log.d("click","click");
                         AlertDialog.Builder customizeDialog =
-                                new AlertDialog.Builder(getContext(),R.style.mdialog);
+                                new AlertDialog.Builder(getContext(), R.style.mdialog);
                         final View dialogView = LayoutInflater.from(getContext())
                                 .inflate(R.layout.error_view, null);
                         customizeDialog.setView(dialogView);
@@ -203,9 +202,9 @@ public class BlankFragment extends Fragment {
             }
         }
 
-        private List<String> errors;
+        final private List<Error> errors;
 
-        RecyclerListAdapter(List errors) {
+        RecyclerListAdapter(List<Error> errors) {
             this.errors = errors;
         }
 
@@ -218,7 +217,11 @@ public class BlankFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            ((ViewHolder) holder).error.setText(errors.get(position));
+            Log.d("position", "" + position);
+            Log.d("size", "" + this.errors.size());
+            if(this.errors.get(position)!=null) {
+                ((ViewHolder) holder).error.setText(this.errors.get(position).toString());
+            }
         }
 
         @Override
