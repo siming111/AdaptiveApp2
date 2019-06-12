@@ -6,11 +6,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -37,10 +46,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends Activity{
+public class MainActivity extends AppCompatActivity implements BlankFragment.OnFragmentInteractionListener {
 
     private ImageView icon;
     private Button go;
@@ -48,14 +59,61 @@ public class MainActivity extends Activity{
     private SpinKitView wait;
     private FloatingActionButton floatingActionButton;
     private EditText editText = null;
-    private FrameLayout root;
+    private ConstraintLayout root;
     private ListView listView;
     private Error[] errors;
     private Map<String,Error> errorMap = new HashMap<>();
+    //private BlankFragment fragment;
+    private FragmentManager manager;
+    private BottomNavigationView navigation;
+    private ViewPager viewPager;
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
+
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    //manager.beginTransaction().hide(fragment).commit();
+                    return true;
+                case R.id.navigation_dashboard:
+                    //manager.beginTransaction().show(fragment).commit();
+                    return true;
+                case R.id.navigation_notifications:
+                    //manager.beginTransaction().hide(fragment).commit();
+                    return true;
+            }
+            return false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        manager = getSupportFragmentManager();
+        viewPager = findViewById(R.id.fragmentviewpager);
+        List<Fragment> fragmentList = new ArrayList<>();
+        fragmentList.add(new BlankFragment());
+        fragmentList.add(new BlankFragment());
+        MyFragmentPagerAdapter myFragmentPagerAdapter = new MyFragmentPagerAdapter(manager, fragmentList);
+        viewPager.setAdapter(myFragmentPagerAdapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+        navigation = findViewById(R.id.navigation);
         error = findViewById(R.id.error);
         go = findViewById(R.id.go);
         wait = findViewById(R.id.wait);
@@ -304,4 +362,28 @@ public class MainActivity extends Activity{
         return false;
     }
     */
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        System.out.println("hello");
+    }
+
+    class MyFragmentPagerAdapter extends FragmentPagerAdapter {
+        private List<Fragment> fragmentList;
+
+        MyFragmentPagerAdapter(FragmentManager fragmentManager, List<Fragment> fragmentList) {
+            super(fragmentManager);
+            this.fragmentList = fragmentList;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            return fragmentList.get(position);
+        }
+
+        @Override
+        public int getCount() {
+            return fragmentList.size();
+        }
+    }
 }
