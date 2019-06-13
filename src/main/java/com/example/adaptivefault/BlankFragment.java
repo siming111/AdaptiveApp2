@@ -10,10 +10,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -190,9 +193,18 @@ public class BlankFragment extends Fragment {
                         AlertDialog.Builder customizeDialog =
                                 new AlertDialog.Builder(getContext(), R.style.mdialog);
                         final View dialogView = LayoutInflater.from(getContext())
-                                .inflate(R.layout.error_view, null);
+                                .inflate(R.layout.localsolution, null);
                         customizeDialog.setView(dialogView);
                         Dialog dialog = customizeDialog.create();
+                        Window window = dialog.getWindow();
+                        window.getDecorView().setPadding(50,50,50,50);
+                        WindowManager.LayoutParams layoutParams = window.getAttributes();
+                        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT;
+                        //layoutParams.horizontalMargin = 100;
+                        //layoutParams.verticalMargin = 100;
+                        window.setAttributes(layoutParams);
+                        final TextView textView = dialogView.findViewById(R.id.solution);
+                        textView.setMovementMethod(ScrollingMovementMethod.getInstance());
                         dialog.setCancelable(true);
                         dialog.setCanceledOnTouchOutside(true);
                         dialog.show();
