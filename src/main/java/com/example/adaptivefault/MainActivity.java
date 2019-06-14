@@ -2,7 +2,6 @@ package com.example.adaptivefault;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,7 +26,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -51,7 +49,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements BlankFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements HistoryFragment.OnFragmentInteractionListener,Chat_Fragment.OnFragmentInteractionListener {
 
     private ImageView icon;
     private Button go;
@@ -63,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
     private ListView listView;
     private Error[] errors;
     private Map<String,Error> errorMap = new HashMap<>();
-    //private BlankFragment fragment;
+    //private HistoryFragment fragment;
     private FragmentManager manager;
     private BottomNavigationView navigation;
     private ViewPager viewPager;
@@ -79,9 +77,6 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
                 case R.id.navigation_dashboard:
                     //manager.beginTransaction().show(fragment).commit();
                     return true;
-                case R.id.navigation_notifications:
-                    //manager.beginTransaction().hide(fragment).commit();
-                    return true;
             }
             return false;
         }
@@ -95,8 +90,9 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
         manager = getSupportFragmentManager();
         viewPager = findViewById(R.id.fragmentviewpager);
         List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new BlankFragment());
-        fragmentList.add(new BlankFragment());
+        fragmentList.add(new Chat_Fragment());
+        fragmentList.add(new HistoryFragment());
+        //fragmentList.add(new HistoryFragment());
         MyFragmentPagerAdapter myFragmentPagerAdapter = new MyFragmentPagerAdapter(manager, fragmentList);
         viewPager.setAdapter(myFragmentPagerAdapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -119,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements BlankFragment.OnF
         wait = findViewById(R.id.wait);
         icon = findViewById(R.id.icon);
         root = findViewById(R.id.root);
+        //root.setVisibility(View.INVISIBLE);
         listView = findViewById(R.id.listview);
         this.setRoot();
         this.setFloatingActionButton();
