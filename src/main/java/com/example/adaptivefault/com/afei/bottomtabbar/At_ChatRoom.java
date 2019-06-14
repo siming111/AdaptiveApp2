@@ -61,7 +61,7 @@ public class At_ChatRoom extends AppCompatActivity {
     }
     private void send(String content){
             if (!content.isEmpty()) {
-                ChatMsg msg = new ChatMsg();
+                final ChatMsg msg = new ChatMsg();
                 msg.setContent(content);
                 msg.setUsrname("hello");
                 msg.setIconID(R.drawable.avastertony);

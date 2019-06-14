@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import java.util.List;
 
 
 public class ChatMsgArrayAdapter extends ArrayAdapter<ChatMsg> {
+    static int number = 0;
     private LayoutInflater inflater;
 
     @Override
@@ -43,7 +45,7 @@ public class ChatMsgArrayAdapter extends ArrayAdapter<ChatMsg> {
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         ChatMsg msg = getItem(position);
-        View view;
+        final View view;
         ViewHolder viewHolder;
         if (convertView == null) {
             assert msg != null;
@@ -64,6 +66,8 @@ public class ChatMsgArrayAdapter extends ArrayAdapter<ChatMsg> {
         viewHolder.icon.setImageResource(chatMsgs.get(position).getIconID());
         viewHolder.username.setText(chatMsgs.get(position).getUsrname());
         viewHolder.content.setText(chatMsgs.get(position).getContent());
+        number++;
+        Log.d("number",""+number);
         return view;
     }
     private class ViewHolder {

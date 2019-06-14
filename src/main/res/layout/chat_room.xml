@@ -22,11 +22,12 @@
                 <ListView
                     android:id="@+id/lv_chat_room"
                     android:divider="#00000000"
-                    android:background="#bababa"
+                    android:background="@color/VChatGray"
                     android:transcriptMode="alwaysScroll"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                 </ListView>
+
                 <com.example.adaptivefault.sidebar.SideBar
                     android:id="@+id/side_bar"
                     android:layout_width="match_parent"
@@ -40,7 +41,7 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:background="#b6b6b6"
+                android:background="@color/VChatGray"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -79,7 +80,7 @@
 
             <LinearLayout
                 android:orientation="horizontal"
-                android:background="#bababa"
+                android:background="@color/VChatGray"
                 android:gravity="center_vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

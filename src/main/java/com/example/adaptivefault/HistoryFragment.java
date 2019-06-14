@@ -179,10 +179,10 @@ public class HistoryFragment extends Fragment {
 
         }
 
-        class ViewHolder extends RecyclerView.ViewHolder {
+        class MyViewHolder extends RecyclerView.ViewHolder {
             private TextView error;
-
-            ViewHolder(View view) {
+            private TextView solution;
+            MyViewHolder(View view) {
                 super(view);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -191,6 +191,10 @@ public class HistoryFragment extends Fragment {
                                 new AlertDialog.Builder(getContext(), R.style.mdialog);
                         final View dialogView = LayoutInflater.from(getContext())
                                 .inflate(R.layout.localsolution, null);
+                        TextView error1 = dialogView.findViewById(R.id.error);
+                        TextView solution1 = dialogView.findViewById(R.id.solution);
+                        error1.setText(error.getText());
+                        solution1.setText(solution.getText());
                         customizeDialog.setView(dialogView);
                         Dialog dialog = customizeDialog.create();
                         Window window = dialog.getWindow();
@@ -208,6 +212,7 @@ public class HistoryFragment extends Fragment {
                     }
                 });
                 error = view.findViewById(R.id.error);
+                solution = view.findViewById(R.id.solution);
             }
         }
 
@@ -220,7 +225,7 @@ public class HistoryFragment extends Fragment {
         @Override
         public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.slide, parent, false);
-            RecyclerView.ViewHolder holder = new ViewHolder(view);
+            RecyclerView.ViewHolder holder = new MyViewHolder(view);
             return holder;
         }
 
@@ -229,7 +234,8 @@ public class HistoryFragment extends Fragment {
             Log.d("position", "" + position);
             Log.d("size", "" + this.errors.size());
             if(this.errors.get(position)!=null) {
-                ((ViewHolder) holder).error.setText(this.errors.get(position).toString());
+                ((MyViewHolder) holder).error.setText(this.errors.get(position).getError());
+                ((MyViewHolder) holder).solution.setText(this.errors.get(position).getSolution());
             }
         }
 

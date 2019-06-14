@@ -8,8 +8,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context=".MainActivity"
-    android:background="#dfdfdf">
+    tools:context=".MainActivity">
 
     <android.support.v4.view.ViewPager
         android:id="@+id/fragmentviewpager"

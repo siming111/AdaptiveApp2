@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,15 +52,16 @@ public class Chat_Fragment extends Fragment {
     private Button unsatisfied;
     private Button voice;
     private Button clear;
-    private String[] letters = new String[]{"A","B","C","D","E","1","2","3","4","5"};
+    private String[] letters = new String[]{"A", "B", "C", "D", "E", "1", "2", "3", "4", "5"};
     private String[] ans = new String[10];
-    private int[] position ;
+    private int[] position;
     private SideBar sideBar;
     private ListView listView;
     private EditText myMsg;
     private Button btnSend;
     private List<ChatMsg> chatMsgList;
     private ChatMsgArrayAdapter chatMsgListAdapter;
+    private String currentError = null;
 
     public Chat_Fragment() {
         // Required empty public constructor
@@ -86,7 +88,7 @@ public class Chat_Fragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((AppCompatActivity)getContext()).getSupportActionBar().hide();
+        ((AppCompatActivity) getContext()).getSupportActionBar().hide();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE |
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -145,17 +147,21 @@ public class Chat_Fragment extends Fragment {
     }
 
 
-    private void foundSolution(){
-        for(int i = 0;i<5;i++){
-            ans[i] = "this is the solution:\n solution     "+ i;
+    private void foundSolution(String error) {
+        Solution[] solutions = Network.ask(new Error(error,null));
+        for (int i = 0; i < 5; i++) {
+            ans[i] = solutions[i].getSolution();
         }
     }
-    private void foundSolution_python(){
-        for(int i = 5;i<10;i++){
-            ans[i] = "this is the python solution:\n      "+ i ;
+
+    private void foundSolution_python(String error) {
+        Solution[] solutions = Network.ask2(new Error(error,null));
+        for (int i = 5; i < 10; i++) {
+            ans[i] = solutions[i].getSolution();
         }
     }
-    private void send(String content){
+
+    private void send(String content) {
         if (!content.isEmpty()) {
             ChatMsg msg = new ChatMsg();
             msg.setContent(content);
@@ -163,31 +169,43 @@ public class Chat_Fragment extends Fragment {
             msg.setIconID(R.drawable.avastertony);
             msg.setMyInfo(false);
             chatMsgList.add(msg);
-            chatMsgListAdapter.notifyDataSetChanged();
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    chatMsgListAdapter.notifyDataSetChanged();
+                }
+            });
         }
     }
+
     private void initViews(View view) {
         unsatisfied = view.findViewById(R.id.At_satisfied);
         clear = view.findViewById(R.id.At_clear);
         voice = view.findViewById(R.id.At_voice);
-        sideBar =  view.findViewById(R.id.side_bar);
-        listView =  view.findViewById(R.id.lv_chat_room);
-        myMsg =  view.findViewById(R.id.myMsg);
-        btnSend =  view.findViewById(R.id.btnSend);
+        sideBar = view.findViewById(R.id.side_bar);
+        listView = view.findViewById(R.id.lv_chat_room);
+        myMsg = view.findViewById(R.id.myMsg);
+        btnSend = view.findViewById(R.id.btnSend);
         chatMsgList = new ArrayList<>();
         chatMsgListAdapter = new ChatMsgArrayAdapter(getContext(), R.layout.chat_other, chatMsgList);
         listView.setAdapter(chatMsgListAdapter);
-        String[] a = new String[]{"A","B","C","D","E","1","2","3","4","7"};
+        String[] a = new String[]{"A", "B", "C", "D", "E", "1", "2", "3", "4", "7"};
         sideBar.setDataResource(a);
         unsatisfied.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String context = "正在为你搜索各大论坛";
                 send(context);
-                foundSolution_python();
-                for(int i = 5;i < 10;i++){
-                    send(ans[i]);
-                    position[i] = chatMsgListAdapter.getCount() - 1; }
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        foundSolution_python(currentError);
+                        for (int i = 5; i < 10; i++) {
+                            send(ans[i]);
+                            position[i] = chatMsgListAdapter.getCount() - 1;
+                        }
+                    }
+                }).start();
             }
         });
         voice.setOnClickListener(new View.OnClickListener() {
@@ -211,15 +229,15 @@ public class Chat_Fragment extends Fragment {
         sideBar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
             @Override
             public void onSelectStr(int index, String selectStr) {
-                if(position == null){
+                if (position == null) {
                     return;
                 }
-                for(int i = 0;i<10;i++){
-                    if(selectStr.equals(letters[i])){
+                for (int i = 0; i < 10; i++) {
+                    if (selectStr.equals(letters[i])) {
                         listView.setSelection(position[i]);
                     }
                 }
-                if(selectStr.equals("#")){
+                if (selectStr.equals("#")) {
                     /*String content = "WE TRY TO KEEPINGWORKING";
                     if (!content.isEmpty()) {
                         ChatMsg msg = new ChatMsg();
@@ -242,6 +260,7 @@ public class Chat_Fragment extends Fragment {
                     imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);//关闭软键盘
                 sideBar.setVisibility(View.VISIBLE);
                 String content = myMsg.getText().toString();
+                currentError = content;
                 if (!content.isEmpty()) {
                     ChatMsg msg = new ChatMsg();
                     msg.setContent(content);
@@ -254,23 +273,38 @@ public class Chat_Fragment extends Fragment {
                 }
                 String content2 = "we are finding the solution";
                 send(content2);
-                foundSolution();
-                position = new int[10];
-                for(int i = 0;i < 5;i++){
-                    send(ans[i]);
-                    position[i] = chatMsgListAdapter.getCount() - 1; }
-                String content3 = "已在数据库为你列出5种解决方法,如满意请长按你满意的答案，按不满意" +
-                        "我们将从各大论坛上面搜寻资料";
-                send(content3);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        foundSolution("hello");
+                        position = new int[10];
+                        for (int i = 0; i < 5; i++) {
+                            send(ans[i]);
+                            position[i] = chatMsgListAdapter.getCount() - 1;
+                        }
+                        String content3 = "已在数据库为你列出5种解决方法,如满意请长按你满意的答案，按不满意" +
+                                "我们将从各大论坛上面搜寻资料";
+                        send(content3);
+                    }
+                }).start();
             }
         });
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Toast.makeText(getContext(),"点赞成功",Toast.LENGTH_SHORT).show();
                 TextView topic = view.findViewById(R.id.content);
                 String ans_good = topic.getText().toString();
-                //send(ans);
+                Log.d("ans_good",ans_good);
+                final Error localError = new Error(currentError,ans_good);
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Network.feelGood(localError.getError(),localError.getSolution());
+                    }
+                }).start();
+                localError.saveInLocal(getContext());
+                Toast.makeText(getContext(), "点赞成功", Toast.LENGTH_SHORT).show();
                 return true;
             }
         });
