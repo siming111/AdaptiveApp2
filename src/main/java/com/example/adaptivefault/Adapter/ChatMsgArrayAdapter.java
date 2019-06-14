@@ -1,6 +1,7 @@
 package com.example.adaptivefault.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +24,6 @@ import java.util.List;
 
 
 public class ChatMsgArrayAdapter extends ArrayAdapter<ChatMsg> {
-    static int number = 0;
     private LayoutInflater inflater;
 
     @Override
@@ -78,11 +79,10 @@ public class ChatMsgArrayAdapter extends ArrayAdapter<ChatMsg> {
                     msg.chat_fragment.findMoreSolution();
                 }
             }, 0, spanString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            spanString.setSpan(new ForegroundColorSpan(Color.BLUE), 0, spanString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             viewHolder.content.append(spanString);
             viewHolder.content.setMovementMethod(LinkMovementMethod.getInstance());
         }
-        number++;
-        Log.d("number",""+number);
         return view;
     }
     private class ViewHolder {

@@ -1,9 +1,13 @@
 package com.example.adaptivefault;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +29,16 @@ import com.example.adaptivefault.sidebar.ISideBarSelectCallBack;
 import com.example.adaptivefault.sidebar.SideBar;
 import com.example.adaptivefault.util.ChatMsg;
 import com.example.adaptivefault.view.TitleBar;
+import com.iflytek.cloud.RecognizerResult;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechUtility;
+import com.iflytek.cloud.ui.RecognizerDialog;
+import com.iflytek.cloud.ui.RecognizerDialogListener;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +77,7 @@ public class Chat_Fragment extends Fragment {
     private List<ChatMsg> chatMsgList;
     private ChatMsgArrayAdapter chatMsgListAdapter;
     private String currentError = null;
-
+    private ImageView voiceImageView;
     public Chat_Fragment() {
         // Required empty public constructor
     }
@@ -157,7 +172,7 @@ public class Chat_Fragment extends Fragment {
     private void foundSolution_python(String error) {
         Solution[] solutions = Network.ask2(new Error(error,null));
         for (int i = 5; i < 10; i++) {
-            ans[i] = solutions[i].getSolution();
+            ans[i] = solutions[i-5].getSolution();
         }
     }
 
@@ -186,11 +201,44 @@ public class Chat_Fragment extends Fragment {
         listView = view.findViewById(R.id.lv_chat_room);
         myMsg = view.findViewById(R.id.myMsg);
         btnSend = view.findViewById(R.id.btnSend);
+        voiceImageView = view.findViewById(R.id.voiceImageView);
         chatMsgList = new ArrayList<>();
         chatMsgListAdapter = new ChatMsgArrayAdapter(getContext(), R.layout.chat_other, chatMsgList);
         listView.setAdapter(chatMsgListAdapter);
         String[] a = new String[]{"A", "B", "C", "D", "E", "1", "2", "3", "4", "7"};
         sideBar.setDataResource(a);
+        voiceImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Chat_Fragment.this.checkReadPermission();
+                SpeechUtility.createUtility(getActivity(), SpeechConstant.APPID + "=5ce8d0be");
+                final RecognizerDialog rd = new RecognizerDialog(getActivity(), null);
+                //设置参数accent,language等参数
+                rd.setParameter(SpeechConstant.LANGUAGE, "zh_cn");//中文
+                rd.setParameter(SpeechConstant.ACCENT, "mandarin");//普通话
+                //设置回调接口
+                rd.setListener(new RecognizerDialogListener() {
+                    @Override
+                    public void onResult(RecognizerResult recognizerResult, boolean b) {
+                        //获取返回结果
+                        rd.dismiss();
+                        String result = parseIatResult(recognizerResult.getResultString());
+                        if(!result.equals("。"))
+                            myMsg.setText(result);
+                        //Log.e("result",result);
+                        //Log.e("b",b+"");
+                    }
+
+                    @Override
+                    public void onError(SpeechError speechError) {
+
+                    }
+                });
+                //显示对话框
+                rd.show();
+            }
+        });
         unsatisfied.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -206,12 +254,7 @@ public class Chat_Fragment extends Fragment {
         clear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String context = "正在为您清除数据";
-                send(context);
-                position = null;
-                chatMsgList.removeAll(chatMsgList);
-                chatMsgListAdapter.notifyDataSetChanged();
-                listView.setAdapter(chatMsgListAdapter);
+                clearListView();
             }
         });
         sideBar.setVisibility(View.INVISIBLE);
@@ -244,6 +287,7 @@ public class Chat_Fragment extends Fragment {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clearListView();
                 InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                 if (getActivity().getCurrentFocus() != null)
                     imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);//关闭软键盘
@@ -260,7 +304,7 @@ public class Chat_Fragment extends Fragment {
                     chatMsgListAdapter.notifyDataSetChanged();
                     myMsg.setText("");
                 }
-                String content2 = "we are finding the solution";
+                String content2 = "正在搜索合适的解决方案";
                 send(content2);
 
                 new Thread(new Runnable() {
@@ -285,8 +329,11 @@ public class Chat_Fragment extends Fragment {
                             @Override
                             public void run() {
                                 chatMsgListAdapter.notifyDataSetChanged();
+                                //listView.setSelection(position[1]);
+                                //listView.setSelection(position[2]);
                             }
                         });
+
                     }
                 }).start();
             }
@@ -309,6 +356,45 @@ public class Chat_Fragment extends Fragment {
                 return true;
             }
         });
+        send("欢迎来到自适应故障APP");
+    }
+
+    public boolean checkReadPermission() {
+        String[] PERMISSION_AUDIO = {Manifest.permission.RECORD_AUDIO};
+        boolean flag = false;
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {//已有权限
+            flag = true;
+        } else {//申请权限
+            ActivityCompat.requestPermissions(getActivity(), PERMISSION_AUDIO, 1);
+        }
+        return flag;
+    }
+
+    public String parseIatResult(String json) {
+        StringBuffer ret = new StringBuffer();
+        try {
+            JSONTokener tokener = new JSONTokener(json);
+            JSONObject joResult = new JSONObject(tokener);
+            JSONArray words = joResult.getJSONArray("ws");
+            for (int i = 0; i < words.length(); i++) {
+                // 转写结果词，默认使用第一个结果
+                JSONArray items = words.getJSONObject(i).getJSONArray("cw");
+                JSONObject obj = items.getJSONObject(0);
+                ret.append(obj.getString("w"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret.toString();
+    }
+
+    private void clearListView() {
+        String context = "正在为您清除数据";
+        send(context);
+        position = null;
+        chatMsgList.removeAll(chatMsgList);
+        chatMsgListAdapter.notifyDataSetChanged();
+        listView.setAdapter(chatMsgListAdapter);
     }
 
     public void findMoreSolution(){

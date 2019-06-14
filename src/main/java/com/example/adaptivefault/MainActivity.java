@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -84,8 +85,8 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         setContentView(R.layout.activity_main);
         manager = getSupportFragmentManager();
         viewPager = findViewById(R.id.fragmentviewpager);
