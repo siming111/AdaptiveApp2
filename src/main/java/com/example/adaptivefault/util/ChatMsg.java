@@ -1,10 +1,13 @@
 package com.example.adaptivefault.util;
 
+import com.example.adaptivefault.Chat_Fragment;
+
 public class ChatMsg {
     private boolean myInfo;
     private int iconID;
     private String usrname;
     private String content;
+    public Chat_Fragment chat_fragment = null;
 
     public boolean isMyInfo() {
         return myInfo;

@@ -109,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
             public void onPageScrollStateChanged(int state) {
             }
         });
-        navigation = findViewById(R.id.navigation);
+        //navigation = findViewById(R.id.navigation);
         error = findViewById(R.id.error);
         go = findViewById(R.id.go);
         wait = findViewById(R.id.wait);

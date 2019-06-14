@@ -194,18 +194,7 @@ public class Chat_Fragment extends Fragment {
         unsatisfied.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String context = "正在为你搜索各大论坛";
-                send(context);
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        foundSolution_python(currentError);
-                        for (int i = 5; i < 10; i++) {
-                            send(ans[i]);
-                            position[i] = chatMsgListAdapter.getCount() - 1;
-                        }
-                    }
-                }).start();
+                findMoreSolution();
             }
         });
         voice.setOnClickListener(new View.OnClickListener() {
@@ -285,7 +274,19 @@ public class Chat_Fragment extends Fragment {
                         }
                         String content3 = "已在数据库为你列出5种解决方法,如满意请长按你满意的答案，按不满意" +
                                 "我们将从各大论坛上面搜寻资料";
-                        send(content3);
+                        ChatMsg msg = new ChatMsg();
+                        msg.setContent(content3);
+                        msg.setUsrname("hello");
+                        msg.setIconID(R.drawable.avastertony);
+                        msg.setMyInfo(false);
+                        msg.chat_fragment = Chat_Fragment.this;
+                        chatMsgList.add(msg);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                chatMsgListAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
                 }).start();
             }
@@ -308,5 +309,20 @@ public class Chat_Fragment extends Fragment {
                 return true;
             }
         });
+    }
+
+    public void findMoreSolution(){
+        String context = "正在为你搜索各大论坛";
+        send(context);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                foundSolution_python(currentError);
+                for (int i = 5; i < 10; i++) {
+                    send(ans[i]);
+                    position[i] = chatMsgListAdapter.getCount() - 1;
+                }
+            }
+        }).start();
     }
 }
