@@ -8,7 +8,7 @@ public class ChatMsg {
     private String usrname;
     private String content;
     public Chat_Fragment chat_fragment = null;
-
+    public Boolean needWait = false;
     public boolean isMyInfo() {
         return myInfo;
     }

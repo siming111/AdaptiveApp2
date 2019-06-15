@@ -42,9 +42,9 @@ public class HistoryFragment extends Fragment {
     private String mParam1;
     private String mParam2;
     private RecyclerView recyclerView;
-
+    private List<Error> errors;
     private OnFragmentInteractionListener mListener;
-
+    private RecyclerListAdapter recyclerListAdapter;
     public HistoryFragment() {
         // Required empty public constructor
     }
@@ -85,10 +85,10 @@ public class HistoryFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         Log.d("recyclerView", recyclerView.toString());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        List<Error> errors = Error.getFromLocal(getContext());
+        errors = Error.getFromLocal(getContext());
         errors.add(new Error("123","456"));
         Log.d("number", "" + errors.size());
-        RecyclerListAdapter recyclerListAdapter = new RecyclerListAdapter(errors);
+        recyclerListAdapter = new RecyclerListAdapter(errors);
         RecyclerListAdapter.MyItemTouchCallback myItemTouchCallback = recyclerListAdapter.new MyItemTouchCallback(recyclerListAdapter);
         recyclerView.setAdapter(recyclerListAdapter);
         ItemTouchHelper helper = new ItemTouchHelper(myItemTouchCallback);
@@ -250,5 +250,9 @@ public class HistoryFragment extends Fragment {
             return this.errors;
         }
 
+    }
+    public void addNewError(Error error){
+        this.errors.add(error);
+        this.recyclerListAdapter.notifyDataSetChanged();
     }
 }

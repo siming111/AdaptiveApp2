@@ -5,7 +5,10 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.BottomNavigationView;
@@ -22,6 +25,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -56,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
     private Button go;
     private TextView error;
     private SpinKitView wait;
-    private FloatingActionButton floatingActionButton;
     private EditText editText = null;
     private ConstraintLayout root;
     private ListView listView;
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
     private FragmentManager manager;
     private BottomNavigationView navigation;
     private ViewPager viewPager;
+    private HistoryFragment historyFragment;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -86,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setLightMode();
         //requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         setContentView(R.layout.activity_main);
         checkReadPermission();
@@ -93,7 +98,8 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
         viewPager = findViewById(R.id.fragmentviewpager);
         List<Fragment> fragmentList = new ArrayList<>();
         fragmentList.add(new Chat_Fragment());
-        fragmentList.add(new HistoryFragment());
+        historyFragment = new HistoryFragment();
+        fragmentList.add(historyFragment);
         //fragmentList.add(new HistoryFragment());
         MyFragmentPagerAdapter myFragmentPagerAdapter = new MyFragmentPagerAdapter(manager, fragmentList);
         viewPager.setAdapter(myFragmentPagerAdapter);
@@ -120,7 +126,6 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
         //root.setVisibility(View.INVISIBLE);
         listView = findViewById(R.id.listview);
         this.setRoot();
-        this.setFloatingActionButton();
         this.setGoButton();
         this.setErrorTextView();
         //this.updateListView();
@@ -205,41 +210,6 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
         });//焦点
     }
 
-    private void setFloatingActionButton(){
-        floatingActionButton = findViewById(R.id.floatingActionButton);
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.this.checkReadPermission();
-                SpeechUtility.createUtility(MainActivity.this, SpeechConstant.APPID + "=5ce8d0be");
-                final RecognizerDialog rd = new RecognizerDialog(MainActivity.this, null);
-                //设置参数accent,language等参数
-                rd.setParameter(SpeechConstant.LANGUAGE, "zh_cn");//中文
-                rd.setParameter(SpeechConstant.ACCENT, "mandarin");//普通话
-                //设置回调接口
-                rd.setListener(new RecognizerDialogListener() {
-                    @Override
-                    public void onResult(RecognizerResult recognizerResult, boolean b) {
-                        //获取返回结果
-                        rd.dismiss();
-                        String result = parseIatResult(recognizerResult.getResultString());
-                        if(!result.equals("。"))
-                            error.setText(result);
-                        //Log.e("result",result);
-                        //Log.e("b",b+"");
-                    }
-
-                    @Override
-                    public void onError(SpeechError speechError) {
-
-                    }
-                });
-                //显示对话框
-                rd.show();
-            }
-        });
-    }
-
     private void setGoButton(){
         go.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -321,9 +291,6 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
         return ret.toString();
     }
 
-    public void setIcon() {
-    }
-
     /*
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -384,5 +351,20 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
         public int getCount() {
             return fragmentList.size();
         }
+    }
+    private void setLightMode() {//设置状态栏颜色
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            // 设置状态栏底色白色
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().setStatusBarColor(getResources().getColor(R.color.VChatWhite));
+
+            // 设置状态栏字体黑色
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
+    }
+    public void addError(Error error){
+        historyFragment.addNewError(error);
     }
 }

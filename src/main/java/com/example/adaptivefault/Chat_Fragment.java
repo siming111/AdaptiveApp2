@@ -29,6 +29,7 @@ import com.example.adaptivefault.sidebar.ISideBarSelectCallBack;
 import com.example.adaptivefault.sidebar.SideBar;
 import com.example.adaptivefault.util.ChatMsg;
 import com.example.adaptivefault.view.TitleBar;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
@@ -78,6 +79,7 @@ public class Chat_Fragment extends Fragment {
     private ChatMsgArrayAdapter chatMsgListAdapter;
     private String currentError = null;
     private ImageView voiceImageView;
+    private SpinKitView wait;
     public Chat_Fragment() {
         // Required empty public constructor
     }
@@ -202,6 +204,7 @@ public class Chat_Fragment extends Fragment {
         myMsg = view.findViewById(R.id.myMsg);
         btnSend = view.findViewById(R.id.btnSend);
         voiceImageView = view.findViewById(R.id.voiceImageView);
+        wait = view.findViewById(R.id.wait);
         chatMsgList = new ArrayList<>();
         chatMsgListAdapter = new ChatMsgArrayAdapter(getContext(), R.layout.chat_other, chatMsgList);
         listView.setAdapter(chatMsgListAdapter);
@@ -307,10 +310,15 @@ public class Chat_Fragment extends Fragment {
                 }
                 String content2 = "正在搜索合适的解决方案";
                 send(content2);
-
+                Chat_Fragment.this.setWait();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         foundSolution(currentError);
                         position = new int[10];
                         for (int i = 0; i < 5; i++) {
@@ -330,11 +338,11 @@ public class Chat_Fragment extends Fragment {
                             @Override
                             public void run() {
                                 chatMsgListAdapter.notifyDataSetChanged();
+                                Chat_Fragment.this.setFinish();
                                 //listView.setSelection(position[1]);
                                 //listView.setSelection(position[2]);
                             }
                         });
-
                     }
                 }).start();
             }
@@ -353,6 +361,7 @@ public class Chat_Fragment extends Fragment {
                     }
                 }).start();
                 localError.saveInLocal(getContext());
+                ((MainActivity) getActivity()).addError(localError);
                 Toast.makeText(getContext(), "点赞成功", Toast.LENGTH_SHORT).show();
                 return true;
             }
@@ -411,5 +420,13 @@ public class Chat_Fragment extends Fragment {
                 }
             }
         }).start();
+    }
+
+    public void setWait(){
+        this.wait.setVisibility(View.VISIBLE);
+    }
+
+    public void setFinish(){
+        this.wait.setVisibility(View.GONE);
     }
 }

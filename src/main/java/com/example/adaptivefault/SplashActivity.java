@@ -2,6 +2,8 @@ package com.example.adaptivefault;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +33,7 @@ public class SplashActivity extends Activity{
         setContentView(R.layout.activity_splash);
         initView();
         initEvent();
+        setLightMode();
         mHandler.postDelayed(mRunnableToMain,3000);
     }
     private void initEvent(){
@@ -55,5 +58,18 @@ public class SplashActivity extends Activity{
     protected void onDestroy() {
         super.onDestroy();
         mHandler.removeCallbacks(mRunnableToMain);
+    }
+
+    private void setLightMode() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+            // 设置状态栏底色白色
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            getWindow().setStatusBarColor(Color.WHITE);
+
+            // 设置状态栏字体黑色
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
     }
 }
