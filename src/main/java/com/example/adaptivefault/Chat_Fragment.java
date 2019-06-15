@@ -298,7 +298,7 @@ public class Chat_Fragment extends Fragment {
                 if (!content.isEmpty()) {
                     ChatMsg msg = new ChatMsg();
                     msg.setContent(content);
-                    msg.setUsrname("hello");
+                    //msg.setUsrname("hello");
                     msg.setIconID(R.drawable.avasterdandelion);
                     msg.setMyInfo(true);
                     chatMsgList.add(msg);
@@ -311,7 +311,7 @@ public class Chat_Fragment extends Fragment {
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        foundSolution("hello");
+                        foundSolution(currentError);
                         position = new int[10];
                         for (int i = 0; i < 5; i++) {
                             send(ans[i]);
