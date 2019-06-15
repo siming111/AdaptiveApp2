@@ -26,9 +26,9 @@ import java.util.List;
 import com.example.adaptivefault.R;
 
 public class At_ChatRoom extends AppCompatActivity {
-    private Button unsatisfied;
-    private Button voice;
-    private Button clear;
+    //private Button unsatisfied;
+    //private Button voice;
+    //private Button clear;
     private String[] letters = new String[]{"A","B","C","D","E","1","2","3","4","5"};
     private String[] ans = new String[10];
     private int[] position ;
@@ -71,9 +71,9 @@ public class At_ChatRoom extends AppCompatActivity {
             }
     }
     private void initViews() {
-        unsatisfied = findViewById(R.id.At_satisfied);
-        clear = findViewById(R.id.At_clear);
-        voice = findViewById(R.id.At_voice);
+        //unsatisfied = findViewById(R.id.At_satisfied);
+        //clear = findViewById(R.id.At_clear);
+        //voice = findViewById(R.id.At_voice);
         sideBar =  findViewById(R.id.side_bar);
         listView =  findViewById(R.id.lv_chat_room);
         myMsg =  findViewById(R.id.myMsg);
@@ -83,6 +83,7 @@ public class At_ChatRoom extends AppCompatActivity {
         listView.setAdapter(chatMsgListAdapter);
         String[] a = new String[]{"A","B","C","D","E","1","2","3","4","7"};
         sideBar.setDataResource(a);
+        /*
         unsatisfied.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -111,6 +112,7 @@ public class At_ChatRoom extends AppCompatActivity {
                 listView.setAdapter(chatMsgListAdapter);
             }
         });
+        */
         sideBar.setVisibility(View.INVISIBLE);
         sideBar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
             @Override

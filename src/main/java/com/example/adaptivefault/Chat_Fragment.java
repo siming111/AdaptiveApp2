@@ -64,9 +64,9 @@ public class Chat_Fragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private Button unsatisfied;
-    private Button voice;
-    private Button clear;
+    //private Button unsatisfied;
+    //private Button voice;
+    //private Button clear;
     private String[] letters = new String[]{"A", "B", "C", "D", "E", "1", "2", "3", "4", "5"};
     private String[] ans = new String[10];
     private int[] position;
@@ -194,9 +194,9 @@ public class Chat_Fragment extends Fragment {
     }
 
     private void initViews(View view) {
-        unsatisfied = view.findViewById(R.id.At_satisfied);
-        clear = view.findViewById(R.id.At_clear);
-        voice = view.findViewById(R.id.At_voice);
+        //unsatisfied = view.findViewById(R.id.At_satisfied);
+        //clear = view.findViewById(R.id.At_clear);
+        //voice = view.findViewById(R.id.At_voice);
         sideBar = view.findViewById(R.id.side_bar);
         listView = view.findViewById(R.id.lv_chat_room);
         myMsg = view.findViewById(R.id.myMsg);
@@ -211,7 +211,7 @@ public class Chat_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Chat_Fragment.this.checkReadPermission();
+                //Chat_Fragment.this.checkReadPermission();
                 SpeechUtility.createUtility(getActivity(), SpeechConstant.APPID + "=5ce8d0be");
                 final RecognizerDialog rd = new RecognizerDialog(getActivity(), null);
                 //设置参数accent,language等参数
@@ -238,7 +238,7 @@ public class Chat_Fragment extends Fragment {
                 //显示对话框
                 rd.show();
             }
-        });
+        });/*
         unsatisfied.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -257,6 +257,7 @@ public class Chat_Fragment extends Fragment {
                 clearListView();
             }
         });
+        */
         sideBar.setVisibility(View.INVISIBLE);
         sideBar.setOnStrSelectCallBack(new ISideBarSelectCallBack() {
             @Override

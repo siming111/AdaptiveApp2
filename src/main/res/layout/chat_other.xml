@@ -7,11 +7,12 @@
 
     <ImageView
         android:id="@+id/icon"
-        android:src="@drawable/avasterdr"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:layout_width="50dp"
-        android:layout_height="50dp" />
+        android:scaleType="centerCrop"
+        android:src="@drawable/wali" />
 
     <LinearLayout
         android:gravity="left"
@@ -24,11 +25,13 @@
 
         <TextView
             android:id="@+id/username"
-            android:textSize="16sp"
-            android:textColor="@color/VChatWhite"
-            android:layout_marginTop="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="小瓦"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
 
         <com.example.adaptivefault.Bubble.BubbleLinearLayout
             android:layout_width="wrap_content"

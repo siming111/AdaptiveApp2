@@ -86,8 +86,9 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
+        //requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
         setContentView(R.layout.activity_main);
+        checkReadPermission();
         manager = getSupportFragmentManager();
         viewPager = findViewById(R.id.fragmentviewpager);
         List<Fragment> fragmentList = new ArrayList<>();

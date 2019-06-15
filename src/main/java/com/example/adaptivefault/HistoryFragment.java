@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Collections;
 import java.util.List;
@@ -175,6 +176,7 @@ public class HistoryFragment extends Fragment {
                     adapter.getmItemLists().remove(position);
                     adapter.notifyItemRemoved(position);
                 }
+                //Toast.makeText(getContext(),"删除成功",Toast.LENGTH_SHORT);
             }
 
         }

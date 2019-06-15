@@ -68,8 +68,8 @@ public class ChatMsgArrayAdapter extends ArrayAdapter<ChatMsg> {
             //view = convertView;
             //viewHolder = (ViewHolder) view.getTag();
         //}
-        viewHolder.icon.setImageResource(chatMsgs.get(position).getIconID());
-        viewHolder.username.setText(chatMsgs.get(position).getUsrname());
+        //viewHolder.icon.setImageResource(chatMsgs.get(position).getIconID());
+        //viewHolder.username.setText(chatMsgs.get(position).getUsrname());
         viewHolder.content.setText(chatMsgs.get(position).getContent());
         if (msg.chat_fragment != null) {
             SpannableString spanString = new SpannableString("更多");
