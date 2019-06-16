@@ -19,6 +19,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -86,13 +87,13 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
             return false;
         }
     };
-
+    private DrawerLayout drawerLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setLightMode();
         //requestWindowFeature(Window.FEATURE_OPTIONS_PANEL);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main5);
         checkReadPermission();
         manager = getSupportFragmentManager();
         viewPager = findViewById(R.id.fragmentviewpager);
@@ -125,6 +126,29 @@ public class MainActivity extends AppCompatActivity implements HistoryFragment.O
         root = findViewById(R.id.root);
         //root.setVisibility(View.INVISIBLE);
         listView = findViewById(R.id.listview);
+        drawerLayout = findViewById(R.id.drawerLayout);
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                //设置拉出布局的宽度
+                // linearLayout.setX(slideOffset * drawerView.getWidth());
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                //  Log.e(TAG, "onDrawerSlide: " + "完全展开时执行");
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                // Log.e(TAG, "onDrawerSlide: " + "完全关闭时执行");
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                //  Log.e(TAG, "onDrawerSlide: " + "改变状态时时执行");
+            }
+        });
         this.setRoot();
         this.setGoButton();
         this.setErrorTextView();
