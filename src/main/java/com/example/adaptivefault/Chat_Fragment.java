@@ -208,7 +208,7 @@ public class Chat_Fragment extends Fragment {
         chatMsgList = new ArrayList<>();
         chatMsgListAdapter = new ChatMsgArrayAdapter(getContext(), R.layout.chat_other, chatMsgList);
         listView.setAdapter(chatMsgListAdapter);
-        String[] a = new String[]{"A", "B", "C", "D", "E", "1", "2", "3", "4", "7"};
+        String[] a = new String[]{"A", "B", "C", "D", "E", "1", "2", "3", "4", "5"};
         sideBar.setDataResource(a);
         voiceImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -308,7 +308,7 @@ public class Chat_Fragment extends Fragment {
                     chatMsgListAdapter.notifyDataSetChanged();
                     myMsg.setText("");
                 }
-                String content2 = "正在搜索合适的解决方案";
+                String content2 = "正在努力搜索合适的解决方案中...";
                 send(content2);
                 Chat_Fragment.this.setWait();
                 new Thread(new Runnable() {
@@ -325,8 +325,7 @@ public class Chat_Fragment extends Fragment {
                             send(ans[i]);
                             position[i] = chatMsgListAdapter.getCount() - 1;
                         }
-                        String content3 = "已在数据库为你列出5种解决方法,如满意请长按你满意的答案，按不满意" +
-                                "我们将从各大论坛上面搜寻资料";
+                        String content3 = "已为您找到如上5个方法，长按点赞可以收藏(๑•̀ㅂ•́)و✧，您还可以查看";
                         ChatMsg msg = new ChatMsg();
                         msg.setContent(content3);
                         msg.setUsrname("hello");
@@ -366,7 +365,7 @@ public class Chat_Fragment extends Fragment {
                 return true;
             }
         });
-        send("欢迎来到自适应故障APP");
+        send("你好呀，我是小瓦<(￣︶￣)>\n你的数控机床遇到什么故障了吗，\n请在下方告诉我噢");
     }
 
     public boolean checkReadPermission() {

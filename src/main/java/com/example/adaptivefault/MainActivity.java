@@ -55,7 +55,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity implements HistoryFragment.OnFragmentInteractionListener,Chat_Fragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements HistoryFragment.OnFragmentInteractionListener,Chat_Fragment.OnFragmentInteractionListener,Introduce_Fragment.OnFragmentInteractionListener {
 
     private ImageView icon;
     private Button go;

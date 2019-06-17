@@ -86,7 +86,7 @@ public class HistoryFragment extends Fragment {
         Log.d("recyclerView", recyclerView.toString());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         errors = Error.getFromLocal(getContext());
-        errors.add(new Error("123","456"));
+        //errors.add(new Error("123","456"));
         Log.d("number", "" + errors.size());
         recyclerListAdapter = new RecyclerListAdapter(errors);
         RecyclerListAdapter.MyItemTouchCallback myItemTouchCallback = recyclerListAdapter.new MyItemTouchCallback(recyclerListAdapter);
