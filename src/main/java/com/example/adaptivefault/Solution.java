@@ -14,7 +14,7 @@ public class Solution implements Serializable {
 
     public String getSolution() {
         return this.solution;
-    }
+    }//
 
     public static Solution[] parseFromJson(JSONArray jsonArray) {
         Solution[] solutions = new Solution[jsonArray.length()];
